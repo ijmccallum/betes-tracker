@@ -36,3 +36,10 @@ _Ohh this is the fun bit!_
 * live error monitoring? (that's free!)
 * code styleguide / enforcement through prettier - built into the CI
 * A11y testing & built into the CI
+
+**Options**
+* Firebase
+* GitLab
+
+https://codeburst.io/graphql-server-on-cloud-functions-for-firebase-ae97441399c0  
+https://medium.com/evenbit/automatically-deploy-to-firebase-with-gitlab-ci-546f194c44d8  
