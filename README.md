@@ -36,3 +36,7 @@ _Ohh this is the fun bit!_
 * live error monitoring? (that's free!)
 * code styleguide / enforcement through prettier - built into the CI
 * A11y testing & built into the CI
+
+**Options**
+* Firebase
+* GitLab
