@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { VictoryChart, VictoryScatter } from "victory";
+import mealDataUtils from "./mealDataUtils.js";
 
 /**
  * The MealChart component
@@ -6,13 +8,23 @@ import React, { Component } from "react";
  */
 
 class MealChart extends Component {
-  //y axis 30 to 300
-  //x axis start time to end time
   render() {
     return (
       <div className="MealChart">
         <h2>{this.props.mealData.meal.title}</h2>
-        <svg />
+        <VictoryChart
+          domain={{
+            x: [0, mealDataUtils.duration(this.props.mealData)],
+            y: [
+              mealDataUtils.lowest(this.props.mealData) - 10,
+              mealDataUtils.highest(this.props.mealData) + 10
+            ]
+          }}
+        >
+          <VictoryScatter
+            data={mealDataUtils.measureScatter(this.props.mealData)}
+          />
+        </VictoryChart>
       </div>
     );
   }
