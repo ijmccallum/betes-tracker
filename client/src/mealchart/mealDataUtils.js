@@ -30,6 +30,26 @@ function endTime(meal) {
   return endTime;
 }
 
+function lowestReading(meal) {
+  let lowReturn = 1000;
+  meal.measurements.forEach(measure => {
+    if (measure.readingUS < lowReturn) {
+      lowReturn = measure.readingUS;
+    }
+  });
+  return lowReturn;
+}
+
+function highestReading(meal) {
+  let highReturn = 0;
+  meal.measurements.forEach(measure => {
+    if (measure.readingUS > highReturn) {
+      highReturn = measure.readingUS;
+    }
+  });
+  return highReturn;
+}
+
 export default {
   startTime,
   endTime,
@@ -41,25 +61,8 @@ export default {
     var diffMins = Math.floor(diffMs / 60000);
     return diffMins;
   },
-  highest: meal => {
-    let highReturn = 0;
-    meal.measurements.forEach(measure => {
-      if (measure.readingUS > highReturn) {
-        highReturn = measure.readingUS;
-      }
-    });
-    return highReturn;
-  },
-  lowest: meal => {
-    let lowReturn = 1000;
-    meal.measurements.forEach(measure => {
-      console.log("measure.readingUS", measure.readingUS, lowReturn);
-      if (measure.readingUS < lowReturn) {
-        lowReturn = measure.readingUS;
-      }
-    });
-    return lowReturn;
-  },
+  highest: highestReading,
+  lowest: lowestReading,
   measureScatter(meal) {
     //return an array of measurement x (mins from start of meal) & y (bloodsugar) values
     let mealStart = new Date(startTime(meal));
@@ -74,5 +77,34 @@ export default {
     });
 
     return scatterData;
+  },
+  exerciseArea(meal) {
+    //returns area data to show the exercise on the chart
+    let mealStart = new Date(startTime(meal));
+    let chartBottomValue = 0;
+    let chartTopValue = 500;
+    let areaData = [{ x: 0, y: chartBottomValue, y0: chartBottomValue }]; //the first point is the chart origin
+    meal.exercises.forEach(exercise => {
+      let startTime = new Date(exercise.start);
+      let startDiffMs = startTime - mealStart;
+      let startXmins = Math.floor(startDiffMs / 60000);
+      console.log("startXmins", startXmins);
+      let endXmins = startXmins + exercise.duration;
+
+      //starting bottom left point
+      areaData.push({
+        x: startXmins,
+        y: chartBottomValue,
+        y0: chartBottomValue
+      });
+      //starting top left point
+      areaData.push({ x: startXmins, y: chartTopValue, y0: chartBottomValue });
+      //end top right point
+      areaData.push({ x: endXmins, y: chartTopValue, y0: chartBottomValue });
+      //end bottom right point
+      areaData.push({ x: endXmins, y: chartBottomValue, y0: chartBottomValue });
+    });
+    console.log("areaData", areaData);
+    return areaData;
   }
 };
