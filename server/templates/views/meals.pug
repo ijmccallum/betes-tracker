@@ -1,0 +1,32 @@
+extends ../layouts/default
+
+block content
+	.container
+		h1 Meals!
+		#meals
+		ul
+			each meal in meals
+				li
+					h2 #{meal.title}
+					p <strong>Date:</strong> #{meal.datetime}
+					p <strong>Carbs:</strong> #{meal.carbs}
+					p <strong>User:</strong> #{meal.user.name.first} #{meal.user.name.last}
+					p <strong>Injections:</strong>
+						ul
+							each injection in meal.injections
+								li #{injection.units}, #{injection.datetime}
+					p <strong>Exercises:</strong>
+						ul
+							each exercise in meal.exercises
+								li #{exercise.title}, #{exercise.duration}, #{exercise.start}
+					p <strong>Snacks:</strong>
+						ul
+							each snack in meal.snacks
+								li #{snack.title}, #{snack.carbs} <!-- !{JSON.stringify(snack)} -->
+					p <strong>Measurements:</strong>
+						ul
+							each measure in meal.measurements
+								li #{measure.readingUS}, #{measure.datetime}
+block js
+	script(src="https://d3js.org/d3.v5.min.js" crossorigin)
+	script(src='/js/meals/main.js')
