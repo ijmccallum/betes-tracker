@@ -37,6 +37,14 @@ function lowestReading(meal) {
       lowReturn = measure.readingUS;
     }
   });
+  if (meal.meal.carbs < lowReturn) {
+    lowReturn = meal.meal.carbs;
+  }
+  meal.snacks.forEach(snack => {
+    if (snack.carbs < lowReturn) {
+      lowReturn = snack.carbs;
+    }
+  });
   return lowReturn;
 }
 
@@ -131,6 +139,35 @@ export default {
       //end bottom right point
       areaData.push({ x: endXmins, y: chartBottomValue, y0: chartBottomValue });
     });
+
+    return areaData;
+  },
+  mealArea(meal) {
+    let earliestTime = new Date(startTime(meal));
+    let mealStart = new Date(meal.meal.datetime);
+    let startXmins = 0;
+    if (mealStart !== earliestTime) {
+      //sometimes the meal is preceeded by something else
+      let startDiffMs = mealStart - earliestTime;
+      startXmins = Math.floor(startDiffMs / 60000);
+    }
+    let endXmins = startXmins + 20; //the width of the bar
+    let chartBottomValue = 0;
+    let chartTopValue = meal.meal.carbs;
+    //the first point is the chart origin
+    let areaData = [{ x: 0, y: chartBottomValue, y0: chartBottomValue }];
+    //starting bottom left point
+    areaData.push({
+      x: startXmins,
+      y: chartBottomValue,
+      y0: chartBottomValue
+    });
+    //starting top left point
+    areaData.push({ x: startXmins, y: chartTopValue, y0: chartBottomValue });
+    //end top right point
+    areaData.push({ x: endXmins, y: chartTopValue, y0: chartBottomValue });
+    //end bottom right point
+    areaData.push({ x: endXmins, y: chartBottomValue, y0: chartBottomValue });
 
     return areaData;
   },

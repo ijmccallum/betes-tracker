@@ -35,7 +35,7 @@ class MealChart extends Component {
             y: [lowestChartValue, highestChartValue]
           }}
         >
-          {/* time */}
+          {/* time markers */}
           <VictoryAxis
             width={mealDataUtils.duration(this.props.mealData) + 10}
             domain={[0, mealDataUtils.duration(this.props.mealData)]}
@@ -46,7 +46,7 @@ class MealChart extends Component {
               axisLabel: { fontSize: 10 }
             }}
           />
-          {/* blood sugar */}
+          {/* blood sugar axis */}
           <VictoryAxis
             crossAxis
             dependentAxis
@@ -60,41 +60,22 @@ class MealChart extends Component {
               tickLabels: { fontSize: 10, padding: 5 }
             }}
           />
-          {/* carbs */}
+          {/* carbs axis */}
           <VictoryAxis
             dependentAxis
             // width={mealDataUtils.duration(this.props.mealData)}
-            height="200"
+            // height={200}
             domain={[0, 200]}
             orientation="right"
             // offsetY="0"
             label="Carbs"
             style={{
-              axisLabel: { fontSize: 10 },
+              axisLabel: { fontSize: 10, fill: "#229954" },
               tickLabels: { fontSize: 10, fill: "#229954", padding: 5 }
             }}
             standalone={true}
           />
-          <InsulinChart
-            mealData={this.props.mealData}
-            height={highestChartValue - lowestChartValue}
-            width={mealDataUtils.duration(this.props.mealData)}
-            chartDomain={{
-              x: [0, mealDataUtils.duration(this.props.mealData)],
-              y: [0, highestChartValue]
-            }}
-          />
-          {/* snacks */}
-          <VictoryArea
-            style={{ data: { fill: "#229954", opacity: "0.5" } }}
-            data={mealDataUtils.snackAreas(this.props.mealData)}
-          />
-          {/* exercise */}
-          <VictoryArea
-            style={{ data: { fill: "#E74C3C", opacity: "0.5" } }}
-            data={mealDataUtils.exerciseAreas(this.props.mealData)}
-          />
-          {/* recommended area lines - TODO: make this a shaded area? */}
+          {/* low line */}
           <VictoryLine
             data={[
               { x: 0, y: 70 },
@@ -107,6 +88,7 @@ class MealChart extends Component {
               }
             }}
           />
+          {/* high line */}
           <VictoryLine
             data={[
               { x: 0, y: 140 },
@@ -119,6 +101,37 @@ class MealChart extends Component {
               }
             }}
           />
+          {/* stacking inslin action curves */}
+          <InsulinChart
+            mealData={this.props.mealData}
+            height={highestChartValue - lowestChartValue}
+            width={mealDataUtils.duration(this.props.mealData)}
+            chartDomain={{
+              x: [0, mealDataUtils.duration(this.props.mealData)],
+              y: [0, highestChartValue]
+            }}
+          />
+          {/* the meal */}
+          <VictoryArea
+            style={{ data: { fill: "#229954", opacity: "0.5" } }}
+            data={mealDataUtils.mealArea(this.props.mealData)}
+            domain={{
+              x: [0, mealDataUtils.duration(this.props.mealData) + 10],
+              y: [0, 200]
+            }}
+            standalone
+          />
+          {/* snack bars, using area to be more accurate time wise */}
+          <VictoryArea
+            style={{ data: { fill: "#229954", opacity: "0.5" } }}
+            data={mealDataUtils.snackAreas(this.props.mealData)}
+          />
+          {/* exercise, also using areas to be accurate */}
+          <VictoryArea
+            style={{ data: { fill: "#E74C3C", opacity: "0.5" } }}
+            data={mealDataUtils.exerciseAreas(this.props.mealData)}
+          />
+          {/* Blood sugar measurements */}
           <VictoryScatter
             data={mealDataUtils.measureScatter(this.props.mealData)}
             labels={datum => `${datum.y}`}

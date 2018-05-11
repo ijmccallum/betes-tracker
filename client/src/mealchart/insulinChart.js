@@ -13,7 +13,7 @@ class InsulinChart extends Component {
     for (var i = 0; i < this.props.mealData.injections.length; i++) {
       areas.push(
         <VictoryArea
-          key={i + 1}
+          key={i}
           data={mealDataUtils.insulinArea(this.props.mealData, i)}
           style={{
             data: {
