@@ -78,7 +78,7 @@ export default {
 
     return scatterData;
   },
-  exerciseArea(meal) {
+  exerciseAreas(meal) {
     //returns area data to show the exercise on the chart
     let mealStart = new Date(startTime(meal));
     let chartBottomValue = 0;
@@ -88,7 +88,6 @@ export default {
       let startTime = new Date(exercise.start);
       let startDiffMs = startTime - mealStart;
       let startXmins = Math.floor(startDiffMs / 60000);
-      console.log("startXmins", startXmins);
       let endXmins = startXmins + exercise.duration;
 
       //starting bottom left point
@@ -104,7 +103,54 @@ export default {
       //end bottom right point
       areaData.push({ x: endXmins, y: chartBottomValue, y0: chartBottomValue });
     });
-    console.log("areaData", areaData);
+
+    return areaData;
+  },
+  snackAreas(meal) {
+    let snackWidth = 10; //the width of the bar
+    let mealStart = new Date(startTime(meal));
+    let chartBottomValue = 0;
+    let chartTopValue = 500;
+    let areaData = [{ x: 0, y: chartBottomValue, y0: chartBottomValue }]; //the first point is the chart origin
+    meal.snacks.forEach(snack => {
+      let startTime = new Date(snack.datetime);
+      let startDiffMs = startTime - mealStart;
+      let startXmins = Math.floor(startDiffMs / 60000);
+      let endXmins = startXmins + snackWidth;
+
+      //starting bottom left point
+      areaData.push({
+        x: startXmins,
+        y: chartBottomValue,
+        y0: chartBottomValue
+      });
+      //starting top left point
+      areaData.push({ x: startXmins, y: chartTopValue, y0: chartBottomValue });
+      //end top right point
+      areaData.push({ x: endXmins, y: chartTopValue, y0: chartBottomValue });
+      //end bottom right point
+      areaData.push({ x: endXmins, y: chartBottomValue, y0: chartBottomValue });
+    });
+
+    return areaData;
+  },
+  insulinArea(meal, insulinI) {
+    let injection = meal.injections[insulinI];
+    //this creates the action curve
+    let mealStart = new Date(startTime(meal));
+    let insulinStart = new Date(injection.datetime);
+    let startDiffMs = insulinStart - mealStart;
+    let startXmins = Math.floor(startDiffMs / 60000);
+    //insulin action curve hard coding for now... 4hrs?
+    let areaData = [
+      { x: startXmins, y: 0 },
+      { x: startXmins + 20, y: 10 * injection.units },
+      { x: startXmins + 60, y: 45 * injection.units },
+      { x: startXmins + 90, y: 50 * injection.units },
+      { x: startXmins + 120, y: 45 * injection.units },
+      { x: startXmins + 180, y: 10 * injection.units },
+      { x: startXmins + 360, y: 0 }
+    ];
     return areaData;
   }
 };
