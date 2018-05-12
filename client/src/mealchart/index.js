@@ -26,20 +26,34 @@ class MealChart extends Component {
     if (highestReading > highestChartValue) {
       highestChartValue = highestReading + 10;
     }
+    let mealDate = new Date(this.props.mealData.meal.datetime);
+    let mealDateString = mealDate.toLocaleTimeString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
     return (
       <div className="MealChart">
-        <p>{this.props.mealData.meal.title}</p>
+        <p className="f6 tc sans-serif ma0">
+          {this.props.mealData.meal.title}
+          <br />
+          {mealDateString}
+        </p>
         <VictoryChart
           domain={{
             x: [0, mealDataUtils.duration(this.props.mealData) + 10],
             y: [lowestChartValue, highestChartValue]
           }}
+          padding={{ top: 0, bottom: 50, left: 50, right: 50 }}
         >
           {/* time markers */}
           <VictoryAxis
             width={mealDataUtils.duration(this.props.mealData) + 10}
             domain={[0, mealDataUtils.duration(this.props.mealData)]}
-            label="Time"
+            label="Minutes after meal"
             standalone={false}
             style={{
               tickLabels: { fontSize: 10, padding: 5 },
@@ -113,7 +127,7 @@ class MealChart extends Component {
           />
           {/* the meal */}
           <VictoryArea
-            style={{ data: { fill: "#229954", opacity: "0.5" } }}
+            style={{ data: { fill: "#229954", opacity: "0.8" } }}
             data={mealDataUtils.mealArea(this.props.mealData)}
             domain={{
               x: [0, mealDataUtils.duration(this.props.mealData) + 10],

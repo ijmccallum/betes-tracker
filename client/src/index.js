@@ -39,10 +39,10 @@ class App extends Component {
   }
   render() {
     return (
-      <ul>
+      <ul className="list flex flex-wrap">
         {this.state.meals.map(function(meal, i) {
           return (
-            <li key={i}>
+            <li key={i} className="w6 pa3 mr2">
               <MealChart mealData={meal} />
             </li>
           );

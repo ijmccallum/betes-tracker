@@ -22,9 +22,14 @@ function endTime(meal) {
       endTime = measure.datetime;
     }
   });
+
   meal.injections.forEach(injection => {
-    if (injection.datetime > endTime) {
-      endTime = injection.datetime;
+    //injection + 360 mins
+    let injectionDate = new Date(injection.datetime);
+    let injectionEnd = new Date(injectionDate.getTime() + 360 * 60000);
+    let injectionEndISOString = injectionEnd.toISOString();
+    if (injectionEndISOString > endTime) {
+      endTime = injectionEndISOString;
     }
   });
   return endTime;
@@ -115,10 +120,9 @@ export default {
     return areaData;
   },
   snackAreas(meal) {
-    let snackWidth = 10; //the width of the bar
+    let snackWidth = 5; //the width of the bar
     let mealStart = new Date(startTime(meal));
     let chartBottomValue = 0;
-    let chartTopValue = 500;
     let areaData = [{ x: 0, y: chartBottomValue, y0: chartBottomValue }]; //the first point is the chart origin
     meal.snacks.forEach(snack => {
       let startTime = new Date(snack.datetime);
@@ -133,9 +137,9 @@ export default {
         y0: chartBottomValue
       });
       //starting top left point
-      areaData.push({ x: startXmins, y: chartTopValue, y0: chartBottomValue });
+      areaData.push({ x: startXmins, y: snack.carbs, y0: chartBottomValue });
       //end top right point
-      areaData.push({ x: endXmins, y: chartTopValue, y0: chartBottomValue });
+      areaData.push({ x: endXmins, y: snack.carbs, y0: chartBottomValue });
       //end bottom right point
       areaData.push({ x: endXmins, y: chartBottomValue, y0: chartBottomValue });
     });

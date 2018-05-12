@@ -10,10 +10,12 @@
   "scripts": {
     "start": "cross-env PORT=3001 react-scripts start",
     "build": "react-scripts build",
+    "copy": "copyfiles \"./build/**/*\" ../server/public/js/meals",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "copyfiles": "^2.0.0",
     "cross-env": "^5.1.5",
     "victory": "^0.26.0"
   }
