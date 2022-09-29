@@ -17,6 +17,6 @@
   "devDependencies": {
     "copyfiles": "^2.0.0",
     "cross-env": "^5.1.5",
-    "victory": "^0.26.0"
+    "victory": "^36.6.8"
   }
 }
